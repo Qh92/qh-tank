@@ -5,8 +5,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * 面向对象的封装过程
  * 继承Frame的目的是为了重写父类的方法
  *
  * @author Qh
@@ -15,12 +18,18 @@ import java.awt.event.WindowEvent;
  */
 public class TankFrame extends Frame {
 
-    private int x = 200,y = 200;
-    private int speed = 10;
+    private static final int GAME_WIDTH = 800;
+    private static final int GAME_HEIGHT = 600;
+
+    private Tank myTank = new Tank(200, 200, Dir.DOWN,this);
+
+    private List<Bullet> bullets = new ArrayList<>();
+
+    //private Bullet bullet = new Bullet(300, 300, Dir.DOWN);
 
     public TankFrame() throws HeadlessException {
         //设置大小
-        setSize(800,600);
+        setSize(GAME_WIDTH,GAME_HEIGHT);
         //设置是否可以改变窗口大小
         setResizable(false);
         //设置窗口名称
@@ -41,19 +50,69 @@ public class TankFrame extends Frame {
     }
 
     /**
+     * 用双缓冲解决闪烁问题
+     */
+    private Image offScreenImage = null;
+    @Override
+    public void update(Graphics g) {
+        //先在内存中将图画画好
+        if (offScreenImage == null){
+            offScreenImage = this.createImage(GAME_WIDTH, GAME_HEIGHT);
+        }
+        Graphics graphics = offScreenImage.getGraphics();
+        Color color = graphics.getColor();
+        graphics.setColor(Color.BLACK);
+        graphics.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+        graphics.setColor(color);
+        paint(graphics);
+        //内存中画好后，一次性的将其输出到屏幕上
+        g.drawImage(offScreenImage, 0, 0, null);
+    }
+
+    /**
      * @param g 画笔
      */
     @Override
     public void paint(Graphics g) {
-        //System.out.println("paint");
+        Color color = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("子弹的数量: " + bullets.size(), 10, 60);
+        g.setColor(color);
         /*
         画一个小黑方块
         以窗口的左上角为起点，横着向右的为x轴，竖着向下的为y轴
          */
-        g.fillRect(x, y, 50, 50);
+        //封装了一个tank过后，如果需要还按这种方式取x,y出来，就会破坏tank的封装性
+        //当然tank对象最清楚自己该画成什么样子
+        myTank.paint(g);
+        for (int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).paint(g);
+        }
+//        for (Bullet bullet : bullets){
+//            bullet.paint(g);
+//        }
+        //g.fillRect(x, y, 50, 50);
         //让方块移动起来
         //x += 10;
         //y += 10;
+
+        //根据方向移动
+        /*switch (dir){
+        case LEFT:
+            x -= SPEED;
+            break;
+        case UP:
+            y -= SPEED;
+            break;
+        case RIGHT:
+            x += SPEED;
+            break;
+        case DOWN:
+            y += SPEED;
+            break;
+        default:
+            break;
+        }*/
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -100,11 +159,12 @@ public class TankFrame extends Frame {
             /*
             根据4个boolean值，计算坦克方向，根据tank方向和速度，自动移动位置（假设tank不能停）
              */
-
-
+            myTank.setMainTankDir(keyCode);
         }
+
         /**
          * 键盘的一个键被抬起来的时候调用
+         * Ctrl键被抬起的时候打出一颗子弹
          * @param e
          */
         @Override
@@ -125,10 +185,35 @@ public class TankFrame extends Frame {
                 case KeyEvent.VK_DOWN:
                     bD = false;
                     break;
+                case KeyEvent.VK_CONTROL:
+                    myTank.fire();
+                    break;
                 default:
                     break;
             }
         }
+
+        /*private void setMainTankDir() {
+            if (bL) myTank.setDir(Dir.LEFT);
+            if (bU) myTank.setDir(Dir.UP);
+            if (bR) myTank.setDir(Dir.RIGHT);
+            if (bD) myTank.setDir(Dir.DOWN);
+        }*/
     }
 
+    public void setBullets(List<Bullet> bullets) {
+        this.bullets = bullets;
+    }
+
+    public List<Bullet> getBullets() {
+        return bullets;
+    }
+
+    public static int getGameWidth() {
+        return GAME_WIDTH;
+    }
+
+    public static int getGameHeight() {
+        return GAME_HEIGHT;
+    }
 }
