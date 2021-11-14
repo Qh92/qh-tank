@@ -1,5 +1,7 @@
 package com.qinh.tank;
 
+import com.sun.imageio.plugins.common.ImageUtil;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -13,38 +15,34 @@ import java.io.IOException;
  */
 public class ResourceMgr {
 
-    private static BufferedImage tankL,tankU,tankR,tankD;
-
-    private static BufferedImage bulletL,bulletU,bulletR,bulletD;
+    public static BufferedImage goodTankL, goodTankU, goodTankR, goodTankD;
+    public static BufferedImage badTankL, badTankU, badTankR, badTankD;
+    public static BufferedImage bulletL, bulletU, bulletR, bulletD;
+    public static BufferedImage[] explodes = new BufferedImage[16];
 
     static {
         try {
-            tankL = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankL.gif"));
-            tankU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankU.gif"));
-            tankR = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankR.gif"));
-            tankD = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/tankD.gif"));
+            goodTankU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/GoodTank1.png"));
+            goodTankL = ImageUtils.rotateImage(goodTankU, -90);
+            goodTankR = ImageUtils.rotateImage(goodTankU, 90);
+            goodTankD = ImageUtils.rotateImage(goodTankU, 180);
 
+            badTankU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/BadTank1.png"));
+            badTankL = ImageUtils.rotateImage(badTankU, -90);
+            badTankR = ImageUtils.rotateImage(badTankU, 90);
+            badTankD = ImageUtils.rotateImage(badTankU, 180);
 
+            bulletU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/bulletU.png"));
+            bulletL = ImageUtils.rotateImage(bulletU, -90);
+            bulletR = ImageUtils.rotateImage(bulletU, 90);
+            bulletD = ImageUtils.rotateImage(bulletU, 180);
 
+            for(int i = 0; i < explodes.length; i++) {
+                explodes[i] = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/e" + (i+1) + ".gif"));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
-    public static BufferedImage getTankL() {
-        return tankL;
-    }
-
-    public static BufferedImage getTankU() {
-        return tankU;
-    }
-
-    public static BufferedImage getTankR() {
-        return tankR;
-    }
-
-    public static BufferedImage getTankD() {
-        return tankD;
-    }
 }

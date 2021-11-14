@@ -31,13 +31,11 @@ public class Main {
             }
         });*/
 
-        TankFrame tankFrame = new TankFrame();
+        TankFrame tankFrame = TankFrame.INSTANCE;
 
         while (true){
             Thread.sleep(50);
             tankFrame.repaint();
         }
-
-
     }
 }

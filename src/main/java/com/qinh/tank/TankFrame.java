@@ -18,16 +18,20 @@ import java.util.List;
  */
 public class TankFrame extends Frame {
 
+    public static final TankFrame INSTANCE = new TankFrame();
+
     private static final int GAME_WIDTH = 800;
     private static final int GAME_HEIGHT = 600;
 
-    private Tank myTank = new Tank(200, 200, Dir.DOWN,this);
+    private Tank myTank = new Tank(200, 200, Dir.DOWN,Group.GOOD);
+
+    private Tank enemyTank = new Tank(300, 300, Dir.DOWN,Group.BAD);
 
     private List<Bullet> bullets = new ArrayList<>();
 
     //private Bullet bullet = new Bullet(300, 300, Dir.DOWN);
 
-    public TankFrame() throws HeadlessException {
+    private TankFrame() throws HeadlessException {
         //设置大小
         setSize(GAME_WIDTH,GAME_HEIGHT);
         //设置是否可以改变窗口大小
@@ -85,36 +89,15 @@ public class TankFrame extends Frame {
         //封装了一个tank过后，如果需要还按这种方式取x,y出来，就会破坏tank的封装性
         //当然tank对象最清楚自己该画成什么样子
         myTank.paint(g);
+        enemyTank.paint(g);
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).paint(g);
         }
-//        for (Bullet bullet : bullets){
-//            bullet.paint(g);
-//        }
-        //g.fillRect(x, y, 50, 50);
-        //让方块移动起来
-        //x += 10;
-        //y += 10;
-
-        //根据方向移动
-        /*switch (dir){
-        case LEFT:
-            x -= SPEED;
-            break;
-        case UP:
-            y -= SPEED;
-            break;
-        case RIGHT:
-            x += SPEED;
-            break;
-        case DOWN:
-            y += SPEED;
-            break;
-        default:
-            break;
-        }*/
     }
 
+    /**
+     * 高内聚，低耦合
+     */
     class MyKeyListener extends KeyAdapter {
 
         /**
@@ -135,31 +118,14 @@ public class TankFrame extends Frame {
             //画笔重新画
             //repaint();
             //取出键值代码
-            int keyCode = e.getKeyCode();
-            switch (keyCode){
-            case KeyEvent.VK_LEFT:
-                //x -= 10;
-                bL = true;
-                break;
-            case KeyEvent.VK_RIGHT:
-                //x += 10;
-                bR = true;
-                break;
-            case KeyEvent.VK_UP:
-                //y -= 10;
-                bU = true;
-                break;
-            case KeyEvent.VK_DOWN:
-                //y += 10;
-                bD = true;
-                break;
-            default:
-                break;
-            }
+
+            //将方法封装到tank内部
+            myTank.keyPressed(e);
+
             /*
             根据4个boolean值，计算坦克方向，根据tank方向和速度，自动移动位置（假设tank不能停）
              */
-            myTank.setMainTankDir(keyCode);
+            //myTank.setMainTankDir(e);
         }
 
         /**
@@ -171,26 +137,8 @@ public class TankFrame extends Frame {
         public void keyReleased(KeyEvent e) {
             //System.out.println("keyReleased");
             //取出键值代码
-            int keyCode = e.getKeyCode();
-            switch (keyCode){
-                case KeyEvent.VK_LEFT:
-                    bL = false;
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    bR = false;
-                    break;
-                case KeyEvent.VK_UP:
-                    bU = false;
-                    break;
-                case KeyEvent.VK_DOWN:
-                    bD = false;
-                    break;
-                case KeyEvent.VK_CONTROL:
-                    myTank.fire();
-                    break;
-                default:
-                    break;
-            }
+            myTank.keyReleased(e);
+
         }
 
         /*private void setMainTankDir() {

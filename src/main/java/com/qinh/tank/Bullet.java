@@ -22,13 +22,16 @@ public class Bullet {
     private static final int HEIGHT = 5;
     /** 子弹是否存活 */
     private boolean live = true;
-    private TankFrame tf;
+    private TankFrame tf = TankFrame.INSTANCE;
 
-    public Bullet(int x, int y, Dir dir,TankFrame tf) {
+    /** 子弹分组 */
+    private Group group;
+
+    public Bullet(int x, int y, Dir dir,Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
-        this.tf = tf;
+        this.group = group;
     }
 
     public void paint(Graphics g) {
@@ -36,25 +39,29 @@ public class Bullet {
             tf.getBullets().remove(this);
         }
 
-        Color color = g.getColor();
-        g.setColor(Color.RED);
-        g.fillOval(x, y, WIDTH, HEIGHT);
-        g.setColor(color);
-        move();
+//        Color color = g.getColor();
+//        g.setColor(Color.RED);
+//        g.fillOval(x, y, WIDTH, HEIGHT);
+//        g.setColor(color);
+        move(g);
     }
 
-    private void move() {
+    private void move(Graphics g) {
         switch (dir){
             case LEFT:
+                g.drawImage(ResourceMgr.bulletL, x, y, null);
                 x -= SPEED;
                 break;
             case UP:
+                g.drawImage(ResourceMgr.bulletU, x, y, null);
                 y -= SPEED;
                 break;
             case RIGHT:
+                g.drawImage(ResourceMgr.bulletR, x, y, null);
                 x += SPEED;
                 break;
             case DOWN:
+                g.drawImage(ResourceMgr.bulletD, x, y, null);
                 y += SPEED;
                 break;
             default:

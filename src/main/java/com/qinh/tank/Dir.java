@@ -16,5 +16,6 @@ public enum Dir {
     /** 右 */
     RIGHT,
     /** 下 */
-    DOWN;
+    DOWN,
+
 }
