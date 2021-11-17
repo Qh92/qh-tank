@@ -2,9 +2,6 @@ package com.qinh.tank;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 封装tank对象，在主窗口需要tank时就new一个tank对象出来
@@ -14,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2021-11-05 23:51
  */
-public class Tank {
+public class Player {
     /** 坦克坐标 */
     private int x = 200,y = 200;
     /** 坦克方向 */
@@ -24,14 +21,14 @@ public class Tank {
     /** 坦克速度 */
     private static final int SPEED = 5;
     /** 坦克是否运动，初始为静止状态 */
-    private boolean moving = true;
+    private boolean moving = false;
     /** 坦克是否存活 */
     private boolean live = true;
 
     /** 坦克分组 */
     private Group group;
 
-    public Tank(int x, int y, Dir dir,Group group) {
+    public Player(int x, int y, Dir dir, Group group) {
         this.x = x;
         this.y = y;
         this.dir = dir;
@@ -48,22 +45,66 @@ public class Tank {
 
         switch (dir){
             case LEFT:
-                g.drawImage(ResourceMgr.badTankL,x,y,null);
+                g.drawImage(ResourceMgr.goodTankL,x,y,null);
                 break;
             case UP:
-                g.drawImage(ResourceMgr.badTankU,x,y,null);
+                g.drawImage(ResourceMgr.goodTankU,x,y,null);
                 break;
             case RIGHT:
-                g.drawImage(ResourceMgr.badTankR,x,y,null);
+                g.drawImage(ResourceMgr.goodTankR,x,y,null);
                 break;
             case DOWN:
-                g.drawImage(ResourceMgr.badTankD,x,y,null);
+                g.drawImage(ResourceMgr.goodTankD,x,y,null);
                 break;
             default:
                 break;
         }
-
         move();
+    }
+
+    public void keyPressed(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        switch (keyCode){
+            case KeyEvent.VK_LEFT:
+                bL = true;
+                break;
+            case KeyEvent.VK_RIGHT:
+                bR = true;
+                break;
+            case KeyEvent.VK_UP:
+                bU = true;
+                break;
+            case KeyEvent.VK_DOWN:
+                bD = true;
+                break;
+            default:
+                break;
+        }
+        setMainTankDir();
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
+        switch (keyCode){
+            case KeyEvent.VK_LEFT:
+                bL = false;
+                break;
+            case KeyEvent.VK_RIGHT:
+                bR = false;
+                break;
+            case KeyEvent.VK_UP:
+                bU = false;
+                break;
+            case KeyEvent.VK_DOWN:
+                bD = false;
+                break;
+            case KeyEvent.VK_CONTROL:
+                fire();
+                break;
+            default:
+                break;
+        }
+        setMainTankDir();
     }
 
     private void move() {
@@ -86,15 +127,30 @@ public class Tank {
             default:
                 break;
         }
-        randomDir();
-        fire();
     }
 
-    //private Random random = new Random();
-    private void randomDir() {
-        this.dir = Dir.randomDir();
-    }
+    public void setMainTankDir() {
 
+
+
+        if (!bL && !bU && !bR && !bD){
+            moving = false;
+            return;
+        }
+        moving = true;
+        if (bL && !bU && !bR && !bD){
+            dir = Dir.LEFT;
+        }
+        if (!bL && bU && !bR && !bD){
+            dir = Dir.UP;
+        }
+        if (!bL && !bU && bR && !bD){
+            dir = Dir.RIGHT;
+        }
+        if (!bL && !bU && !bR && bD){
+            dir = Dir.DOWN;
+        }
+    }
 
     private void fire() {
         //将子弹的位置设置在坦克正中心
@@ -151,11 +207,6 @@ public class Tank {
         return SPEED;
     }
 
-    public Group getGroup() {
-        return group;
-    }
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
+
 }

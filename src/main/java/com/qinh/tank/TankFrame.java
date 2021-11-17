@@ -23,7 +23,7 @@ public class TankFrame extends Frame {
     private static final int GAME_WIDTH = 800;
     private static final int GAME_HEIGHT = 600;
 
-    private Tank myTank = new Tank(200, 200, Dir.DOWN,Group.GOOD);
+    private Player myTank = new Player(200, 200, Dir.DOWN,Group.GOOD);
 
     private Tank enemyTank = new Tank(300, 300, Dir.DOWN,Group.BAD);
 
@@ -91,7 +91,13 @@ public class TankFrame extends Frame {
         myTank.paint(g);
         enemyTank.paint(g);
         for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).paint(g);
+            //先检测是否碰撞
+            bullets.get(i).collidesWithTank(enemyTank);
+            if (!bullets.get(i).isLive()){
+                bullets.remove(i);
+            }else {
+                bullets.get(i).paint(g);
+            }
         }
     }
 
@@ -100,13 +106,6 @@ public class TankFrame extends Frame {
      */
     class MyKeyListener extends KeyAdapter {
 
-        /**
-         * 4个方向值，根据按键判定坦克的移动方向
-         */
-        boolean bL = false;
-        boolean bR = false;
-        boolean bU = false;
-        boolean bD = false;
         /**
          * 键盘的一个键被按下去的时候调用
          * @param e

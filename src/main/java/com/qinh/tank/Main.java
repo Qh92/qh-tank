@@ -13,29 +13,10 @@ import java.awt.event.WindowEvent;
  */
 public class Main {
     public static void main(String[] args) throws InterruptedException {
-        /*//窗口
-        Frame frame = new Frame();
-        //设置大小
-        frame.setSize(800,600);
-        //设置是否可以改变窗口大小
-        frame.setResizable(false);
-        //设置窗口名称
-        frame.setTitle("tank war");
-        //设置窗口是否可见
-        frame.setVisible(true);
-        //关闭窗口，创建匿名子类的匿名对象
-        frame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                System.exit(0);
-            }
-        });*/
-
-        TankFrame tankFrame = TankFrame.INSTANCE;
 
         while (true){
             Thread.sleep(50);
-            tankFrame.repaint();
+            TankFrame.INSTANCE.repaint();
         }
     }
 }

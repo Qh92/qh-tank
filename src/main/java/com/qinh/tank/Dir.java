@@ -1,5 +1,7 @@
 package com.qinh.tank;
 
+import java.util.Random;
+
 /**
  * 坦克方向枚举类
  *
@@ -16,6 +18,12 @@ public enum Dir {
     /** 右 */
     RIGHT,
     /** 下 */
-    DOWN,
+    DOWN;
+
+
+    private static Random r = new Random();
+    public static Dir randomDir(){
+        return Dir.values()[r.nextInt(Dir.values().length)];
+    }
 
 }
