@@ -14,6 +14,8 @@ import java.awt.event.WindowEvent;
 public class Main {
     public static void main(String[] args) throws InterruptedException {
 
+        new Thread(() -> new Audio("audio/war1.wav").loop()).start();
+
         while (true){
             Thread.sleep(50);
             TankFrame.INSTANCE.repaint();

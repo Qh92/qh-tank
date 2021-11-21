@@ -23,11 +23,15 @@ public class TankFrame extends Frame {
     private static final int GAME_WIDTH = 800;
     private static final int GAME_HEIGHT = 600;
 
-    private Player myTank = new Player(200, 200, Dir.DOWN,Group.GOOD);
+    private Player myTank = null;
 
-    private Tank enemyTank = new Tank(300, 300, Dir.DOWN,Group.BAD);
+    //private Tank enemyTank = new Tank(300, 300, Dir.DOWN,Group.BAD);
+    private  List<Tank> tanks = null;
 
-    private List<Bullet> bullets = new ArrayList<>();
+    private List<Bullet> bullets = null;
+
+    //private Explode explode = new Explode(150, 150);
+    private List<Explode> explodes = null;
 
     //private Bullet bullet = new Bullet(300, 300, Dir.DOWN);
 
@@ -51,6 +55,18 @@ public class TankFrame extends Frame {
         //键盘监听事件
         addKeyListener(new MyKeyListener());
 
+        initGameObjects();
+
+    }
+
+    private void initGameObjects() {
+        myTank = new Player(200, 200, Dir.DOWN,Group.GOOD);
+        tanks = new ArrayList<>();
+        bullets = new ArrayList<>();
+        explodes = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            tanks.add(new Tank(100 + 50 * i, 200, Dir.DOWN,Group.BAD));
+        }
     }
 
     /**
@@ -81,6 +97,8 @@ public class TankFrame extends Frame {
         Color color = g.getColor();
         g.setColor(Color.WHITE);
         g.drawString("子弹的数量: " + bullets.size(), 10, 60);
+        g.drawString("enemies: " + tanks.size(), 10, 70);
+        g.drawString("爆炸数量: " + explodes.size(), 10, 80);
         g.setColor(color);
         /*
         画一个小黑方块
@@ -89,14 +107,29 @@ public class TankFrame extends Frame {
         //封装了一个tank过后，如果需要还按这种方式取x,y出来，就会破坏tank的封装性
         //当然tank对象最清楚自己该画成什么样子
         myTank.paint(g);
-        enemyTank.paint(g);
+        for (int i = 0; i < tanks.size(); i++) {
+            if (!tanks.get(i).isLive()){
+                tanks.remove(i);
+            }else {
+                tanks.get(i).paint(g);
+            }
+        }
         for (int i = 0; i < bullets.size(); i++) {
             //先检测是否碰撞
-            bullets.get(i).collidesWithTank(enemyTank);
+            for (int j = 0; j < tanks.size(); j++) {
+                bullets.get(i).collidesWithTank(tanks.get(j));
+            }
             if (!bullets.get(i).isLive()){
                 bullets.remove(i);
             }else {
                 bullets.get(i).paint(g);
+            }
+        }
+        for (int i = 0; i < explodes.size(); i++) {
+            if (!explodes.get(i).isLive()){
+                explodes.remove(i);
+            }else {
+                explodes.get(i).paint(g);
             }
         }
     }
@@ -146,6 +179,10 @@ public class TankFrame extends Frame {
             if (bR) myTank.setDir(Dir.RIGHT);
             if (bD) myTank.setDir(Dir.DOWN);
         }*/
+    }
+
+    public void add(Explode explode){
+        this.explodes.add(explode);
     }
 
     public void setBullets(List<Bullet> bullets) {

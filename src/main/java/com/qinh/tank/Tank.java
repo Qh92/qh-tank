@@ -27,6 +27,10 @@ public class Tank {
     private boolean moving = true;
     /** 坦克是否存活 */
     private boolean live = true;
+    /** 记录敌人坦克的上一个位置 */
+    private int oldX,oldY;
+    /** 坦克的宽度、高度 */
+    private int width,height;
 
     /** 坦克分组 */
     private Group group;
@@ -36,6 +40,11 @@ public class Tank {
         this.y = y;
         this.dir = dir;
         this.group = group;
+        this.oldX = x;
+        this.oldY = y;
+
+        this.width = ResourceMgr.goodTankU.getWidth();
+        this.height = ResourceMgr.goodTankU.getHeight();
     }
 
 
@@ -70,6 +79,10 @@ public class Tank {
         if (!moving) {
             return;
         }
+
+        oldX = x;
+        oldY = y;
+
         switch (dir){
             case LEFT:
                 x -= SPEED;
@@ -86,13 +99,19 @@ public class Tank {
             default:
                 break;
         }
+
+        boundsCheck();
         randomDir();
-        fire();
+        if (random.nextInt(100) > 90 ) {
+            fire();
+        }
     }
 
-    //private Random random = new Random();
+    private Random random = new Random();
     private void randomDir() {
-        this.dir = Dir.randomDir();
+        if (random.nextInt(100) > 95) {
+            this.dir = Dir.randomDir();
+        }
     }
 
 
@@ -103,8 +122,23 @@ public class Tank {
         TankFrame.INSTANCE.getBullets().add(new Bullet(bulletX, bulletY, dir,group));
     }
 
+    private void boundsCheck() {
+        if (x < 0 || x + width > TankFrame.INSTANCE.getWidth() || y < 30 || y + height > TankFrame.INSTANCE.getHeight()) {
+            this.back();
+        }
+    }
+
+    /**
+     * 返回上一个位置
+     */
+    private void back() {
+        this.x = oldX;
+        this.y = oldY;
+    }
+
     public void die() {
         this.setLive(false);
+        TankFrame.INSTANCE.add( new Explode(x, y));
     }
 
     public boolean isLive() {

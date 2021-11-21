@@ -94,7 +94,7 @@ public class Bullet {
      * @param tank
      */
     public void collidesWithTank(Tank tank) {
-        if (!tank.isLive()){
+        if (!tank.isLive() || !this.isLive()){
             return;
         }
         if (this.group == tank.getGroup()){
