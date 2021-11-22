@@ -1,0 +1,6 @@
+initTankCount=5
+gameWidth=800
+gameHeight=600
+
+#tank fire strategy
+tankFireStrategy=LeftUpFireStrategy

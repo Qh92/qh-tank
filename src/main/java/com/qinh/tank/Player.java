@@ -1,5 +1,10 @@
 package com.qinh.tank;
 
+import com.qinh.tank.strategy.DefaultFireStrategy;
+import com.qinh.tank.strategy.FireStrategy;
+import com.qinh.tank.strategy.FourDirFireStrategy;
+import com.qinh.tank.strategy.LeftRightFireStrategy;
+
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
@@ -131,8 +136,6 @@ public class Player {
 
     public void setMainTankDir() {
 
-
-
         if (!bL && !bU && !bR && !bD){
             moving = false;
             return;
@@ -153,10 +156,16 @@ public class Player {
     }
 
     private void fire() {
-        //将子弹的位置设置在坦克正中心
-        int bulletX = x + (ResourceMgr.goodTankU.getWidth() - ResourceMgr.bulletU.getWidth()) / 2;
-        int bulletY = y + (ResourceMgr.goodTankU.getHeight() - ResourceMgr.bulletU.getHeight()) / 2;
-        TankFrame.INSTANCE.getBullets().add(new Bullet(bulletX, bulletY, dir,group));
+        ClassLoader loader = this.getClass().getClassLoader();
+        String className = PropertyMgr.get("tankFireStrategy");
+
+        try {
+            Class<?> aClass = loader.loadClass("com.qinh.tank.strategy." + className);
+            FireStrategy strategy = (FireStrategy)aClass.newInstance();
+            strategy.fire(this);
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     public void die() {
@@ -207,6 +216,11 @@ public class Player {
         return SPEED;
     }
 
+    public Group getGroup() {
+        return group;
+    }
 
-
+    public void setGroup(Group group) {
+        this.group = group;
+    }
 }
