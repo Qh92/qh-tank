@@ -38,6 +38,8 @@ public class Player {
         this.y = y;
         this.dir = dir;
         this.group = group;
+        //初始化开火策略
+        this.initFireStrategy();
     }
 
 
@@ -155,17 +157,22 @@ public class Player {
         }
     }
 
-    private void fire() {
+    private FireStrategy strategy = null;
+    private void initFireStrategy(){
         ClassLoader loader = this.getClass().getClassLoader();
         String className = PropertyMgr.get("tankFireStrategy");
 
         try {
             Class<?> aClass = loader.loadClass("com.qinh.tank.strategy." + className);
-            FireStrategy strategy = (FireStrategy)aClass.newInstance();
-            strategy.fire(this);
+            strategy = (FireStrategy)aClass.newInstance();
+
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
             e.printStackTrace();
         }
+    }
+
+    private void fire() {
+        strategy.fire(this);
     }
 
     public void die() {
