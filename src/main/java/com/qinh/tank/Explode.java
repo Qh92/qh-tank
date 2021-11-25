@@ -9,7 +9,7 @@ import java.awt.*;
  * @version 1.0
  * @date 2021-11-06 21:44
  */
-public class Explode {
+public class Explode extends AbstractGameObject{
     /**
      * 爆炸位置
      */

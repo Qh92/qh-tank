@@ -16,7 +16,7 @@ import java.awt.event.KeyEvent;
  * @version 1.0
  * @date 2021-11-05 23:51
  */
-public class Player {
+public class Player extends AbstractGameObject{
     /** 坦克坐标 */
     private int x = 200,y = 200;
     /** 坦克方向 */

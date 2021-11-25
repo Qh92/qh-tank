@@ -13,7 +13,7 @@ public class LeftRightFireStrategy implements FireStrategy{
     public void fire(Player player) {
         int bulletX = player.getX() + (ResourceMgr.goodTankU.getWidth() - ResourceMgr.bulletU.getWidth()) / 2;
         int bulletY = player.getY() + (ResourceMgr.goodTankU.getHeight() - ResourceMgr.bulletU.getHeight()) / 2;
-        TankFrame.INSTANCE.getBullets().add(new Bullet(bulletX, bulletY, Dir.LEFT,player.getGroup()));
-        TankFrame.INSTANCE.getBullets().add(new Bullet(bulletX, bulletY, Dir.RIGHT,player.getGroup()));
+        TankFrame.INSTANCE.add(new Bullet(bulletX, bulletY, Dir.LEFT,player.getGroup()));
+        TankFrame.INSTANCE.add(new Bullet(bulletX, bulletY, Dir.RIGHT,player.getGroup()));
     }
 }

@@ -13,6 +13,6 @@ public class DefaultFireStrategy implements FireStrategy{
         //将子弹的位置设置在坦克正中心
         int bulletX = player.getX() + (ResourceMgr.goodTankU.getWidth() - ResourceMgr.bulletU.getWidth()) / 2;
         int bulletY = player.getY() + (ResourceMgr.goodTankU.getHeight() - ResourceMgr.bulletU.getHeight()) / 2;
-        TankFrame.INSTANCE.getBullets().add(new Bullet(bulletX, bulletY, player.getDir(),player.getGroup()));
+        TankFrame.INSTANCE.add(new Bullet(bulletX, bulletY, player.getDir(),player.getGroup()));
     }
 }

@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2021-11-05 23:51
  */
-public class Tank {
+public class Tank extends AbstractGameObject{
     /** 坦克坐标 */
     private int x = 200,y = 200;
     /** 坦克方向 */
@@ -119,7 +119,7 @@ public class Tank {
         //将子弹的位置设置在坦克正中心
         int bulletX = x + (ResourceMgr.goodTankU.getWidth() - ResourceMgr.bulletU.getWidth()) / 2;
         int bulletY = y + (ResourceMgr.goodTankU.getHeight() - ResourceMgr.bulletU.getHeight()) / 2;
-        TankFrame.INSTANCE.getBullets().add(new Bullet(bulletX, bulletY, dir,group));
+        TankFrame.INSTANCE.add(new Bullet(bulletX, bulletY, dir,group));
     }
 
     private void boundsCheck() {

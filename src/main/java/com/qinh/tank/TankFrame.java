@@ -27,12 +27,17 @@ public class TankFrame extends Frame {
     private Player myTank = null;
 
     //private Tank enemyTank = new Tank(300, 300, Dir.DOWN,Group.BAD);
-    private  List<Tank> tanks = null;
+    //private  List<Tank> tanks = null;
 
-    private List<Bullet> bullets = null;
+    //private List<Bullet> bullets = null;
 
     //private Explode explode = new Explode(150, 150);
-    private List<Explode> explodes = null;
+    //private List<Explode> explodes = null;
+
+    /**
+     * 将所有物体抽象
+     */
+    private List<AbstractGameObject> abstractGameObjects;
 
     //private Bullet bullet = new Bullet(300, 300, Dir.DOWN);
 
@@ -62,14 +67,17 @@ public class TankFrame extends Frame {
 
     private void initGameObjects() {
         myTank = new Player(200, 200, Dir.DOWN,Group.GOOD);
-        tanks = new ArrayList<>();
+        /*tanks = new ArrayList<>();
         bullets = new ArrayList<>();
-        explodes = new ArrayList<>();
+        explodes = new ArrayList<>();*/
+        abstractGameObjects = new ArrayList<>();
 
         int tankCount = Integer.parseInt(PropertyMgr.get("initTankCount"));
         for (int i = 0; i < tankCount; i++) {
-            tanks.add(new Tank(100 + 50 * i, 200, Dir.DOWN,Group.BAD));
+            abstractGameObjects.add(new Tank(100 + 50 * i, 200, Dir.DOWN,Group.BAD));
         }
+
+        abstractGameObjects.add(new Wall(300, 400, 100, 120));
     }
 
     /**
@@ -99,9 +107,9 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         Color color = g.getColor();
         g.setColor(Color.WHITE);
-        g.drawString("子弹的数量: " + bullets.size(), 10, 60);
+        /*g.drawString("子弹的数量: " + bullets.size(), 10, 60);
         g.drawString("enemies: " + tanks.size(), 10, 70);
-        g.drawString("爆炸数量: " + explodes.size(), 10, 80);
+        g.drawString("爆炸数量: " + explodes.size(), 10, 80);*/
         g.setColor(color);
         /*
         画一个小黑方块
@@ -110,7 +118,10 @@ public class TankFrame extends Frame {
         //封装了一个tank过后，如果需要还按这种方式取x,y出来，就会破坏tank的封装性
         //当然tank对象最清楚自己该画成什么样子
         myTank.paint(g);
-        for (int i = 0; i < tanks.size(); i++) {
+        for (int i = 0; i < abstractGameObjects.size(); i++) {
+            abstractGameObjects.get(i).paint(g);
+        }
+        /*for (int i = 0; i < tanks.size(); i++) {
             if (!tanks.get(i).isLive()){
                 tanks.remove(i);
             }else {
@@ -134,7 +145,7 @@ public class TankFrame extends Frame {
             }else {
                 explodes.get(i).paint(g);
             }
-        }
+        }*/
     }
 
     /**
@@ -184,16 +195,36 @@ public class TankFrame extends Frame {
         }*/
     }
 
-    public void add(Explode explode){
+    /**
+     * 将方法参数的类型设为抽象类，多态
+     * @param ago
+     */
+    public void add(AbstractGameObject ago) {
+        this.abstractGameObjects.add(ago);
+    }
+
+    /*public void add(Explode explode){
         this.explodes.add(explode);
     }
 
-    public void setBullets(List<Bullet> bullets) {
+    public void add(Bullet bullet){
+        this.bullets.add(bullet);
+    }*/
+
+    /*public void setBullets(List<Bullet> bullets) {
         this.bullets = bullets;
     }
 
     public List<Bullet> getBullets() {
         return bullets;
+    }*/
+
+    public List<AbstractGameObject> getAbstractGameObjects() {
+        return abstractGameObjects;
+    }
+
+    public void setAbstractGameObjects(List<AbstractGameObject> abstractGameObjects) {
+        this.abstractGameObjects = abstractGameObjects;
     }
 
     public static int getGameWidth() {

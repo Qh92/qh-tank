@@ -9,7 +9,7 @@ import java.awt.*;
  * @version 1.0
  * @date 2021-11-24 0:04
  */
-public class Wall {
+public class Wall extends AbstractGameObject{
     private int x, y, w, h;
 
     public Wall(int x, int y, int w, int h) {
